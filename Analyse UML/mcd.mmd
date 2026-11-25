@@ -11,7 +11,7 @@ erDiagram
         string role
         datetime date_inscription
     }
-    QR_CODES {
+    QR_CODE {
         int id PK
         string contenu
         string type
@@ -30,7 +30,7 @@ erDiagram
         string logo
         string cadre
     }
-    SCANS {
+    SCAN {
         int id PK
         int qr_id FK
         datetime scanned_at
