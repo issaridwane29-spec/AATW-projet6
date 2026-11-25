@@ -1,0 +1,89 @@
+@startuml
+title Diagramme de classes - Plateforme QR Code
+skinparam classAttributeIconSize 0
+
+enum Role {
+  UTILISATEUR
+  ADMIN
+}
+
+enum StatutQR {
+  ACTIF
+  INACTIF
+  EXPIRE
+}
+
+enum TypeContenu {
+  URL
+  TEXTE
+  VCARD
+  WIFI
+  EMAIL
+}
+
+class Utilisateur {
+  - id : int
+  - nom : String
+  - email : String
+  - motDePasse : String
+  - role : Role
+  - dateInscription : DateTime
+  + sInscrire() : boolean
+  + seConnecter() : boolean
+  + creerQRCode(contenu, type) : QRCode
+}
+
+class QRCode {
+  - id : int
+  - contenu : String
+  - type : TypeContenu
+  - codeCourt : String
+  - nbScansMax : int
+  - nbScansActuel : int
+  - statut : StatutQR
+  - dateCreation : DateTime
+  - dateExpiration : DateTime
+  + generer() : Image
+  + modifierQuota(nouveauMax : int) : void
+  + estValide() : boolean
+  + incrementerScan() : void
+  + activer() : void
+  + desactiver() : void
+  + telecharger(format : String) : File
+}
+
+class Personnalisation {
+  - id : int
+  - forme : String
+  - couleurFond : String
+  - couleurPoints : String
+  - logo : String
+  - cadre : String
+}
+
+class Scan {
+  - id : int
+  - qr_id : int
+  - scanned_at : DateTime
+  - ip_address : String
+  - country : String
+  - city : String
+  + enregistrer() : void
+}
+
+class Statistiques {
+  + filtrerParPeriode(debut, fin) : List<Scan>
+  + filtrerParZone(country, city) : List<Scan>
+  + filtrerParAdresse(ip_address) : List<Scan>
+  + totalScans(qr : QRCode) : int
+}
+
+Utilisateur "1" -- "0..*" QRCode : crée >
+QRCode "1" *-- "1" Personnalisation : a pour style >
+QRCode "1" -- "0..*" Scan : reçoit >
+Statistiques ..> Scan : analyse
+Statistiques ..> QRCode : concerne
+Utilisateur --> Role
+QRCode --> StatutQR
+QRCode --> TypeContenu
+@enduml
