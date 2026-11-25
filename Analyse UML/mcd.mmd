@@ -1,0 +1,40 @@
+erDiagram
+    UTILISATEUR ||--o{ QR_CODES : "CREER (1,1)-(0,n)"
+    QR_CODES ||--|| PERSONNALISATION : "AVOIR_STYLE (1,1)-(1,1)"
+    QR_CODES ||--o{ SCANS : "RECEVOIR (1,1)-(0,n)"
+
+    UTILISATEUR {
+        int id_user PK
+        string nom
+        string email
+        string mot_de_passe
+        string role
+        datetime date_inscription
+    }
+    QR_CODE {
+        int id PK
+        string contenu
+        string type
+        string code_court
+        int nb_scans_max
+        int nb_scans_actuel
+        string statut
+        datetime date_creation
+        datetime date_expiration
+    }
+    PERSONNALISATION {
+        int id_perso PK
+        string forme
+        string couleur_fond
+        string couleur_points
+        string logo
+        string cadre
+    }
+    SCAN {
+        int id PK
+        int qr_id FK
+        datetime scanned_at
+        string ip_address
+        string country
+        string city
+    }
